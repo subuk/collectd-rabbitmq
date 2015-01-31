@@ -4,6 +4,7 @@ python plugin for collectd to obtain rabbitmq stats
 import collectd
 import urllib2
 import urllib
+import socket
 import json
 import re
 
@@ -11,6 +12,8 @@ RABBIT_API_URL = "http://{host}:{port}/api/"
 
 QUEUE_MESSAGE_STATS = ['messages', 'messages_ready', 'messages_unacknowledged']
 QUEUE_STATS = ['memory', 'messages', 'consumers']
+
+HOSTNAME = socket.gethostname()
 
 MESSAGE_STATS = ['ack', 'publish', 'publish_in', 'publish_out', 'confirm', 'deliver', 'deliver_noack', 'get', 'get_noack', 'deliver_get', 'redeliver', 'return']
 MESSAGE_DETAIL = ['avg', 'avg_rate', 'rate', 'sample']
@@ -92,9 +95,7 @@ def dispatch_values(values, host, plugin, plugin_instance, metric_type,
 	plugin_instance, metric_type, type_instance, values))
 
     metric = collectd.Values()
-    if host:
-    	metric.host = host
-    metric.plugin = plugin
+    metric.plugin = "%s_%s" % (host, plugin)
     if plugin_instance:
         metric.plugin_instance = plugin_instance
     metric.type = metric_type
