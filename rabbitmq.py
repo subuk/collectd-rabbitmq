@@ -69,10 +69,10 @@ def get_info(url):
         info = urllib2.urlopen(url)
     except urllib2.HTTPError as http_error:
         collectd.error("Error: %s" % (http_error))
-        return None
+        return []
     except urllib2.URLError as url_error:
         collectd.error("Error: %s" % (url_error))
-        return None
+        return []
     return json.load(info)
 
 def dispatch_values(values, host, plugin, plugin_instance, metric_type,
